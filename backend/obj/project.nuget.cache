@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "4tjaF4HYRno=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\amits\\Desktop\\talpiot\\fullstack-projects\\yad2\\backend\\backend.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\amits\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.1\\microsoft.aspnetcore.openapi.10.0.1.nupkg.sha512",
+    "C:\\Users\\amits\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
+    "C:\\Users\\amits\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\10.1.0\\swashbuckle.aspnetcore.swaggerui.10.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}
