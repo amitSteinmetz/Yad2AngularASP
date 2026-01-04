@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { PopularApartment } from '../../../core/config/navigation.config';
+import { PopularApartment } from '../../../core/constants/home-page.constants';
 
 @Component({
   selector: 'app-apartment-card',

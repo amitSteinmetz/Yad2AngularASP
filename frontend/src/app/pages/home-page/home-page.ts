@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { NavigationService } from '../../core/services/navigation.service';
 import { RouterLink } from '@angular/router';
-import { BANNERS } from '../../core/config/banners.config';
+import { BANNERS } from '../../core/constants/home-page.constants';
 import { ApartmentCard } from '../../shared/components/apartment-card/apartment-card';
 import { Carousel } from '../../shared/components/carousel/carousel';
 

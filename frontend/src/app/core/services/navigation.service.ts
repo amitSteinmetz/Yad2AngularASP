@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CATEGORIES, POPULAR_APARTMENTS } from '../config/navigation.config';
+import { POPULAR_APARTMENTS } from '../constants/home-page.constants';
+import { CATEGORIES } from '../constants/navigation.constants';
 @Injectable({
   providedIn: 'root',
 })

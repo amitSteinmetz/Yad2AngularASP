@@ -11,8 +11,7 @@
       </h2>
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
         @for (category of categories; track $index) {
-        <a
-          [routerLink]="category.route"
+        <div
           class="group flex flex-col items-center gap-3 md:gap-4 p-4 md:p-6 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
         >
           <div
@@ -29,7 +28,7 @@
           >
             {{ category.label }}
           </h3>
-        </a>
+        </div>
         }
       </div>
     </section>

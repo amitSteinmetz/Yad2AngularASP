@@ -2,16 +2,20 @@
   [routerLink]="apartment().route"
   class="group block bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1"
 >
-  <div class="relative overflow-hidden aspect-[4/3]">
+  <div class="relative overflow-hidden aspect-[16/10] image-container bg-gray-100">
     <img
       [src]="apartment().image"
       [alt]="apartment().label"
-      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 apartment-image"
+      loading="lazy"
     />
     <div
-      class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-md"
+      class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"
+    ></div>
+    <div
+      class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg border border-white/20"
     >
-      <span class="text-orange-600 font-bold text-sm">חדש</span>
+      <span class="text-orange-600 font-bold text-xs uppercase tracking-wider">חדש</span>
     </div>
   </div>
   <div class="p-4">
