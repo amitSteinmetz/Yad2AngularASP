@@ -1,0 +1,77 @@
+<section class="relative w-full overflow-hidden">
+  <div class="relative my-12">
+    <!-- Carousel Container -->
+    <div
+      class="flex h-full transition-transform duration-500 ease-in-out"
+      [style.transform]="'translateX(' + currentSlide() * 100 + '%)'"
+    >
+      @for (image of images(); track $index) {
+      <div class="min-w-full h-full relative flex items-center justify-center overflow-hidden">
+        <!-- Ambient Background (Blurred) -->
+        <div
+          class="absolute inset-0 scale-110 opacity-30 brightness-50 blur-2xl"
+          [style.backgroundImage]="'url(' + image.path + ')'"
+          style="background-size: cover; background-position: center"
+        ></div>
+
+        <!-- Main Image (Full Visibility) -->
+        <img
+          [src]="image.path"
+          alt="Slide {{ $index + 1 }}"
+          class="relative z-10 max-w-full max-h-full object-contain shadow-2xl"
+        />
+
+        <!-- Soft Overlay -->
+        <div class="absolute inset-0 bg-black/10 z-20"></div>
+      </div>
+      }
+    </div>
+
+    <!-- Previous Button -->
+    <button
+      (click)="previousSlide()"
+      class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-2 md:p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
+      aria-label="Previous slide"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 md:h-6 md:w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <!-- Next Button -->
+    <button
+      (click)="nextSlide()"
+      class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-2 md:p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
+      aria-label="Next slide"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 md:h-6 md:w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+
+    <!-- Carousel Indicators -->
+    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+      @for (image of images(); track $index) {
+      <button
+        (click)="goToSlide($index)"
+        class="w-2 h-2 rounded-full bg-white/50 hover:bg-white transition-all duration-300"
+        [class.bg-white]="$index === currentSlide()"
+        [class.w-8]="$index === currentSlide()"
+        aria-label="Go to slide {{ $index + 1 }}"
+      ></button>
+      }
+    </div>
+  </div>
+</section>
