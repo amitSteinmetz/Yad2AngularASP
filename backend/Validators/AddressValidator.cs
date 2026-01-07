@@ -1,4 +1,4 @@
-﻿using backend.Models.Asset;
+﻿using backend.Models.AssetModels;
 using FluentValidation;
 
 namespace backend.Validators

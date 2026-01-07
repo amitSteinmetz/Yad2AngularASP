@@ -1,18 +1,15 @@
-﻿using backend.Models.Asset;
+﻿using backend.Models.AssetModels;
 using FluentValidation;
 
 namespace backend.Validators
 {
-    public class PublisherValidator : AbstractValidator<AssetPublisher>
+    public class ContactDetailsValidator : AbstractValidator<ContactDetails>
     {
-        public PublisherValidator()
+        public ContactDetailsValidator()
         {
-            RuleFor(x => x.UserId)
-                .NotEmpty().WithMessage("חובה להזין מספר מזהה של המפרסם");
-
             RuleFor(x => x.FullName)
-                .NotEmpty().WithMessage("שם המפרסם הינו שדה חובה.")
-                .MaximumLength(100).WithMessage("שם המפרסם לא יכול לעלות על 100 תווים.");
+                .NotEmpty().WithMessage("שם איש הקשר הינו שדה חובה.")
+                .MaximumLength(100).WithMessage("שם איש הקשר לא יכול לעלות על 100 תווים.");
 
             RuleFor(x => x.PhoneNumber)
                 .NotEmpty().WithMessage("חובה להזין מספר טלפון")

@@ -1,4 +1,4 @@
-﻿using backend.Models.Asset;
+﻿using backend.Models.AssetModels;
 using FluentValidation;
 
 namespace backend.Validators
@@ -44,7 +44,7 @@ namespace backend.Validators
 
             // ולידציה לאובייקטים מורכבים (Address & Publisher)
             RuleFor(x => x.Address).SetValidator(new AddressValidator()); // implement AddressValidator
-            RuleFor(x => x.Publisher).SetValidator(new PublisherValidator()); // implement PublisherValidator
+            RuleFor(x => x.ContactDetails).SetValidator(new ContactDetailsValidator()); // implement PublisherValidator
 
             // ולידציה לרשימת התמונות (Gallery)
             RuleForEach(x => x.GalleryImageUrls)

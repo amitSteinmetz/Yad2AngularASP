@@ -1,4 +1,4 @@
-﻿namespace backend.Models.Asset
+﻿namespace backend.Models.AssetModels
 {
     public enum AssetCondition
     {

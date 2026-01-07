@@ -1,11 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace backend.Models.Asset
+namespace backend.Models.AssetModels
 {
     public class Asset
     {
         [Key] //  לנוחות בלבד - מגדיר מפורשות את השדה כמפתח ראשי
         public int Id { get; set; }
+
+        [Required]
+        public string PublisherId { get; set; } = string.Empty;
+
+        public User Publisher { get; set; } = null!;
 
         [Required] 
         public AssetType Type { get; set; }
@@ -59,6 +65,6 @@ namespace backend.Models.Asset
         public AssetAddress Address { get; set; } = new();
 
         [Required] // נכס חייב מפרסם
-        public AssetPublisher Publisher { get; set; } = new();
+        public ContactDetails ContactDetails { get; set; } = new();
     }
 }
