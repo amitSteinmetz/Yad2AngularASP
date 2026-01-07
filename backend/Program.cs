@@ -15,7 +15,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); // create connection string in appsettings.json
 
-builder.Services.AddValidatorsFromAssemblyContaining<AssetValidator>(); // ask gemini what it does
+builder.Services.AddValidatorsFromAssemblyContaining<AssetValidator>();
 
 // chhose identiy configuration method
 
