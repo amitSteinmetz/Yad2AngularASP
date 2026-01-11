@@ -17,10 +17,6 @@ namespace backend.DB
 
             modelBuilder.Entity<Asset>(entity =>
             {
-                // convert enum to string in DB
-                entity.Property(a => a.Type).HasConversion<string>(); 
-                entity.Property(a => a.Condition).HasConversion<string>();
-
                 // flat Asset complex fields inside it's table
                 entity.OwnsOne(a => a.Address);
                 entity.OwnsOne(a => a.ContactDetails);

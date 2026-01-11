@@ -7,9 +7,8 @@ namespace backend.Validators
     {
         public AssetValidator()
         {
-            // המרה של ה-Annotations
             RuleFor(x => x.Type)
-                .IsInEnum().WithMessage("סוג נכס לא תקין"); // ask gemini what it does
+                .IsInEnum().WithMessage("סוג נכס לא תקין");
 
             RuleFor(x => x.Condition)
                 .IsInEnum().WithMessage("מצב נכס לא תקין");
@@ -23,30 +22,31 @@ namespace backend.Validators
             RuleFor(x => x.Price)
                 .GreaterThanOrEqualTo(0).WithMessage("המחיר לא יכול להיות שלילי");
 
+            RuleFor(x => x.AreaInSquareMeters)
+                .GreaterThan(0).WithMessage("שטח הנכס חייב להיות גדול מ-0");
+
+            RuleFor(x => x.BuiltAreaInSquareMeters)
+                .GreaterThanOrEqualTo(0).WithMessage("שטח בנוי לא יכול להיות שלילי")
+                .LessThanOrEqualTo(x => x.AreaInSquareMeters)
+                .WithMessage("השטח הבנוי לא יכול להיות גדול מהשטח הכולל");
+
             RuleFor(x => x.NumberOfRooms)
                 .InclusiveBetween(1, 20).When(x => x.NumberOfRooms.HasValue)
                 .WithMessage("מספר חדרים חייב להיות בין 1 ל-20");
 
             RuleFor(x => x.MainImageUrl)
-                .Must(uri => string.IsNullOrEmpty(uri) || Uri.TryCreate(uri, UriKind.Absolute, out _)) // ask gemini what it does
+                .Must(uri => string.IsNullOrEmpty(uri) || Uri.TryCreate(uri, UriKind.Absolute, out _))
                 .WithMessage("כתובת התמונה הראשית אינה תקינה");
 
-            // 1. לוגיקה: שטח בנוי מול שטח כללי
-            RuleFor(x => x.BuiltAreaInSquareMeters)
-                .LessThanOrEqualTo(x => x.AreaInSquareMeters)
-                .WithMessage("השטח הבנוי לא יכול להיות גדול מהשטח הכולל של הנכס");
-
-            // 2. לוגיקה: תאריך כניסה מול תאריך פרסום
             RuleFor(x => x.EntryDate)
-                .GreaterThanOrEqualTo(x => x.PublishDate) // ask gemini how it comapre dates
+                .GreaterThanOrEqualTo(x => x.PublishDate)
                 .When(x => x.EntryDate.HasValue)
                 .WithMessage("תאריך הכניסה חייב להיות היום או בעתיד");
 
-            // ולידציה לאובייקטים מורכבים (Address & Publisher)
-            RuleFor(x => x.Address).SetValidator(new AddressValidator()); // implement AddressValidator
-            RuleFor(x => x.ContactDetails).SetValidator(new ContactDetailsValidator()); // implement PublisherValidator
+            // קריאה לולידטורים של אובייקטים מורכבים
+            RuleFor(x => x.Address).SetValidator(new AddressValidator());
+            RuleFor(x => x.ContactDetails).SetValidator(new ContactDetailsValidator());
 
-            // ולידציה לרשימת התמונות (Gallery)
             RuleForEach(x => x.GalleryImageUrls)
                 .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
                 .WithMessage("אחד הקישורים בגלריה אינו תקין");

@@ -1,5 +1,6 @@
 ﻿using backend.DTOs;
 using backend.IRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,7 @@ namespace backend.Controllers
 
             if (result.Succeeded)
             {
-                return Ok("משתמש נרשם בהצלחה, מחרוזת טקסט");
+                return Ok(new { message = Resources.ClientMessages.Auth.RegistrationSuccess });
             }
 
             return BadRequest(result.Errors);
@@ -36,7 +37,7 @@ namespace backend.Controllers
             var (accessToken, refreshToken) = await _authRepository.LoginAsync(details);
 
             if (accessToken == null || refreshToken == null)
-                return Unauthorized(new { message = "אימייל או סיסמה שגויים" });
+                return Unauthorized(new { message = Resources.ClientMessages.Auth.InvalidCredentials });
 
             // יצירת העוגייה
             var cookieOptions = new CookieOptions
@@ -49,7 +50,7 @@ namespace backend.Controllers
 
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
 
-            return Ok(new { accessToken, message = "התחברת בהצלחה!" });
+            return Ok(new { accessToken, message = Resources.ClientMessages.Auth.LoginSuccess });
         }
 
         // refresh
@@ -61,14 +62,14 @@ namespace backend.Controllers
 
             if (string.IsNullOrEmpty(refreshToken))
             {
-                return Unauthorized(new { message = "No refresh token provided" });
+                return Unauthorized(new { message = Resources.ClientMessages.Auth.NoRefreshToken });
             }
 
             var (newAccessToken, newRefreshToken) = await _authRepository.RefreshTokenAsync(refreshToken);
 
             if (newAccessToken == null || newRefreshToken == null)
             {
-                return Unauthorized(new { message = "Invalid or expired refresh token" });
+                return Unauthorized(new { message = Resources.ClientMessages.Auth.RefreshTokenInvalid });
             }
 
             // עדכון העוגייה עם הריפרש טוקן החדש
@@ -85,5 +86,25 @@ namespace backend.Controllers
         }
 
         // logout
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            // 1. שליפת הריפרש טוקן מהעוגייה לצורך זיהוי ב-DB
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            // 2. ביטול הטוקן בשרת
+            await _authRepository.LogoutAsync(refreshToken);
+
+            // 3. מחיקת העוגייה מהדפדפן
+            Response.Cookies.Delete("refreshToken", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict
+            });
+
+            return Ok(new { message = Resources.ClientMessages.Auth.LogoutSuccess });
+        }
     }
 }

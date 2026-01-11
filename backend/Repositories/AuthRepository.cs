@@ -81,5 +81,20 @@ namespace backend.Repositories
         }
 
         // logout
+        public async Task LogoutAsync(string? refreshToken)
+        {
+            if (string.IsNullOrEmpty(refreshToken)) return;
+
+            // מציאת המשתמש שהטוקן שייך לו
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+
+            if (user != null)
+            {
+                // איפוס הטוקן ב-DB
+                user.RefreshToken = null;
+                user.RefreshTokenExpiryTime = null;
+                await _userManager.UpdateAsync(user);
+            }
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace backend.IRepositories
         Task<IdentityResult> RegisterAsync(RegisterDetails registerDetails);
         Task<(string? accessToken, string? refreshToken)> LoginAsync(LoginDetails details);
         Task<(string? accessToken, string? refreshToken)> RefreshTokenAsync(string refreshToken);
+        Task LogoutAsync(string? refreshToken);
     }
 }
