@@ -2,7 +2,7 @@
 {
     public enum AssetType
     {
-        Apartment,           // דירה
+        Apartment = 1,           // דירה
         GardenApartment,     // דירת גן
         Penthouse,           // פנטהאוז
         Duplex,              // דופלקס

@@ -11,7 +11,9 @@ namespace backend.Models.AssetModels
 
         [Required]
         public string Street { get; set; } = string.Empty;
-        public int? HouseNumber { get; set; } // nullable to allow assets without number (ground, etc.)
+
+        //public int? buildingNumber { get; set; }
+        public int? HouseNumber { get; set; }
 
         public int? ZipCode { get; set; }
     }

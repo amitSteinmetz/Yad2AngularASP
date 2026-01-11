@@ -1,16 +1,18 @@
-﻿using backend.Models.AssetModels;
+﻿using backend.DTOs;
 using FluentValidation;
 
 namespace backend.Validators
 {
-    public class AssetValidator : AbstractValidator<Asset>
+    public class AssetDtoValidator : AbstractValidator<AssetDto>
     {
-        public AssetValidator()
+        public AssetDtoValidator()
         {
             RuleFor(x => x.Type)
+                .NotEmpty().WithMessage("סוג הנכס הינו שדה חובה.")
                 .IsInEnum().WithMessage("סוג נכס לא תקין");
 
             RuleFor(x => x.Condition)
+                .NotEmpty().WithMessage("מצב הנכס הינו שדה חובה.")
                 .IsInEnum().WithMessage("מצב נכס לא תקין");
 
             RuleFor(x => x.Description)
@@ -20,7 +22,7 @@ namespace backend.Validators
                 .InclusiveBetween(-1, 100).WithMessage("קומה חייבת להיות בין 1- ל-100");
 
             RuleFor(x => x.Price)
-                .GreaterThanOrEqualTo(0).WithMessage("המחיר לא יכול להיות שלילי");
+                .GreaterThan(0).WithMessage("יש לציין מחיר");
 
             RuleFor(x => x.AreaInSquareMeters)
                 .GreaterThan(0).WithMessage("שטח הנכס חייב להיות גדול מ-0");
@@ -39,7 +41,7 @@ namespace backend.Validators
                 .WithMessage("כתובת התמונה הראשית אינה תקינה");
 
             RuleFor(x => x.EntryDate)
-                .GreaterThanOrEqualTo(x => x.PublishDate)
+                .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow))
                 .When(x => x.EntryDate.HasValue)
                 .WithMessage("תאריך הכניסה חייב להיות היום או בעתיד");
 
