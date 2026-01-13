@@ -10,7 +10,8 @@ namespace backend.Helpers
         {
             CreateMap<AssetDto, Asset>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.PublishDate, opt => opt.Ignore());
+                .ForMember(dest => dest.PublishDate, opt => opt.Ignore())
+                .ReverseMap();
         }
     }
 }

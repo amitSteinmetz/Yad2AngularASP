@@ -12,7 +12,6 @@ namespace backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class AssetsController : ControllerBase
     {
         private readonly IAssetsRepository _assetsRepository;
@@ -25,24 +24,22 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAssets([FromQuery] AssetFilters filters)
+        public async Task<IActionResult> GetAssetsByPage([FromQuery] AssetFilters filters)
         {
-            // אם המשתמש לא שלח מספר דף, נניח דף 1
-            if (filters.PageNumber <= 0) filters.PageNumber = 1;
+            var (pageAssets, assetsTotalCount) = await _assetsRepository.GetAssetsByPageAsync(filters);
 
-            var (assets, assetsTotalCount) = await _assetsRepository.GetAssetsAsync(filters);
-
-            var assetsDto = _mapper.Map<IEnumerable<AssetDto>>(assets); // fix and understand
+            var pageAssetsDto = _mapper.Map<IEnumerable<AssetDto>>(pageAssets); 
 
             // מחזירים גם את התוצאות וגם את הספירה הכוללת
             return Ok(new
             {
-                Items = assetsDto,
+                Items = pageAssetsDto,
                 assetsTotalCount,
-                PageSize = 10 // כדי שהקליינט ידע איך לחלק
+                PageSize = 10 // כדי שהקליינט ידע איך לחלק - צריך עוד לחשוב אם צריך את זה באמת
             });
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateAsset([FromBody] AssetDto assetDto)
         {
