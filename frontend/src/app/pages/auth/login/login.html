@@ -1,0 +1,130 @@
+<div class="auth-container">
+  <div class="header">
+    <div class="logo">
+      <img src="https://www.yad2.co.il/y2assets/images/header/logo.svg" alt="yad2 logo" />
+    </div>
+  </div>
+
+  <main class="auth-main">
+    <!-- Left Section -->
+    <div class="info-section">
+      <h1 class="info-title">
+        לקנות מהר, למכור מהר.<br />
+        ויש לנו אחלה כלים לזה.
+      </h1>
+      <div class="info-icons">
+        <div class="icon-item">
+          <div class="icon-circle">
+            <img
+              src="https://www.yad2.co.il/y2assets/images/auth/personal-area.svg"
+              alt="Personal Area"
+            />
+          </div>
+          <span>אזור אישי</span>
+        </div>
+        <div class="icon-item">
+          <div class="icon-circle">
+            <img
+              src="https://www.yad2.co.il/y2assets/images/auth/publish-ad.svg"
+              alt="Publish Ad"
+            />
+          </div>
+          <span>פרסום מודעה</span>
+        </div>
+        <div class="icon-item">
+          <div class="icon-circle">
+            <img src="https://www.yad2.co.il/y2assets/images/auth/chat.svg" alt="Chat" />
+          </div>
+          <span>צ'אט</span>
+        </div>
+        <div class="icon-item">
+          <div class="icon-circle">
+            <img src="https://www.yad2.co.il/y2assets/images/auth/alerts.svg" alt="Alerts" />
+            <span class="badge">1</span>
+          </div>
+          <span>התראות</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Section -->
+    <div class="form-section">
+      <div class="agent-link">כניסה למתווכים</div>
+      <div class="auth-card">
+        <h2 class="form-title">היי, טוב לראות אותך</h2>
+
+        <div class="social-buttons">
+          <button class="social-btn google">
+            <img src="https://www.yad2.co.il/y2assets/images/auth/google-icon.svg" alt="Google" />
+            גוגל
+          </button>
+          <button class="social-btn apple">
+            <img src="https://www.yad2.co.il/y2assets/images/auth/apple-icon.svg" alt="Apple" />
+            אפל
+          </button>
+        </div>
+
+        <div class="divider">
+          <span>או התחברו דרך</span>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+          <div class="form-group">
+            <label for="email">מייל</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              [(ngModel)]="email"
+              placeholder="amitsteinmetz@gmail.com"
+              required
+              class="form-input"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">סיסמה</label>
+            <div class="password-input-wrapper">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                [(ngModel)]="password"
+                placeholder="************"
+                required
+                class="form-input"
+              />
+              <button type="button" class="toggle-password">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <a href="#" class="forgot-password">שכחתי סיסמה</a>
+
+          <button type="submit" class="submit-btn" [disabled]="!loginForm.form.valid">
+            התחברות
+          </button>
+        </form>
+
+        <div class="footer-link">
+          <span>אין לך חשבון?</span>
+          <a routerLink="/auth/register">להרשמה</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

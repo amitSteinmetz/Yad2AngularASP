@@ -30,12 +30,10 @@ namespace backend.Controllers
 
             var pageAssetsDto = _mapper.Map<IEnumerable<AssetDto>>(pageAssets); 
 
-            // מחזירים גם את התוצאות וגם את הספירה הכוללת
             return Ok(new
             {
                 Items = pageAssetsDto,
-                assetsTotalCount,
-                PageSize = 10 // כדי שהקליינט ידע איך לחלק - צריך עוד לחשוב אם צריך את זה באמת
+                assetsTotalCount
             });
         }
 

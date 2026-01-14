@@ -1,0 +1,276 @@
+.auth-container {
+  min-height: 100vh;
+  background-color: #fef7eb;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Assistant', sans-serif;
+  direction: rtl;
+}
+
+.header {
+  padding: 20px 40px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.logo img {
+  height: 40px;
+}
+
+.auth-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 150px;
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Left Section */
+.info-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.info-title {
+  font-size: 40px;
+  font-weight: 700;
+  color: #363636;
+  margin-bottom: 60px;
+  line-height: 1.2;
+}
+
+.info-icons {
+  display: flex;
+  gap: 40px;
+}
+
+.icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #363636;
+}
+
+.icon-circle {
+  width: 56px;
+  height: 56px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.icon-circle img {
+  width: 28px;
+  height: 28px;
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #ff7100;
+  color: white;
+  font-size: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+/* Right Section */
+.form-section {
+  flex: 1;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.agent-link {
+  align-self: flex-start;
+  font-size: 14px;
+  color: #363636;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.auth-card {
+  background: white;
+  width: 100%;
+  padding: 40px;
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.form-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #363636;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.social-buttons {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.social-btn {
+  flex: 1;
+  height: 48px;
+  border: 1px solid #e5e5e5;
+  background: white;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.social-btn:hover {
+  background: #f9f9f9;
+}
+
+.social-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.divider {
+  position: relative;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: #eee;
+}
+
+.divider span {
+  position: relative;
+  background: white;
+  padding: 0 10px;
+  color: #999;
+  font-size: 12px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.form-input {
+  width: 100%;
+  height: 48px;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 0 16px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  border-color: #ff7100;
+}
+
+.password-input-wrapper {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+}
+
+.forgot-password {
+  display: block;
+  color: #ff7100;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 24px;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 48px;
+  background: #ff7100;
+  color: white;
+  border: none;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 30px;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #e66600;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.footer-link {
+  text-align: center;
+  font-size: 14px;
+  color: #363636;
+}
+
+.footer-link a {
+  color: #ff7100;
+  text-decoration: none;
+  font-weight: 700;
+  margin-right: 5px;
+}
+
+@media (max-width: 900px) {
+  .auth-main {
+    flex-direction: column-reverse;
+    gap: 40px;
+  }
+  .info-section {
+    display: none;
+  }
+}
