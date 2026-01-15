@@ -34,9 +34,9 @@ namespace backend.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDetails details)
         {
-            var (accessToken, refreshToken) = await _authRepository.LoginAsync(details);
+            var result = await _authRepository.LoginAsync(details);
 
-            if (accessToken == null || refreshToken == null)
+            if (result == null)
                 return Unauthorized(new { message = Resources.ClientMessages.Auth.InvalidCredentials });
 
             // יצירת העוגייה
@@ -48,9 +48,9 @@ namespace backend.Controllers
                 Expires = DateTime.Now.AddHours(5)
             };
 
-            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+            Response.Cookies.Append("refreshToken", result.RefreshToken, cookieOptions);
 
-            return Ok(new { accessToken, message = Resources.ClientMessages.Auth.LoginSuccess });
+            return Ok(new { accessToken = result.AccessToken, user = result.UserDto, message = Resources.ClientMessages.Auth.LoginSuccess });
         }
 
         // refresh

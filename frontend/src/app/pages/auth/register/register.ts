@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -11,15 +12,20 @@ import { FormsModule } from '@angular/forms';
   styleUrl: '../login/login.css', // Reusing the same CSS
 })
 export class RegisterPage {
-  firstName = '';
-  lastName = '';
+  fullName = '';
   email = '';
   password = '';
+  authService = inject(AuthService);
 
   onSubmit() {
     console.log('Register attempt:', {
-      firstName: this.firstName,
-      lastName: this.lastName,
+      fullName: this.fullName,
+      email: this.email,
+      password: this.password,
+    });
+
+    this.authService.register({
+      fullName: this.fullName,
       email: this.email,
       password: this.password,
     });

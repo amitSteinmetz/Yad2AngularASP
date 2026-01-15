@@ -25,7 +25,8 @@ namespace backend.Repositories
         {
             var user = new User
             {
-                FullName = registerDetails.Fullname,
+                FirstName = registerDetails.FirstName,
+                LastName = registerDetails.LastName,
                 Email = registerDetails.Email,
                 UserName = registerDetails.Email
             };
@@ -36,13 +37,13 @@ namespace backend.Repositories
         }
 
         // login
-        public async Task<(string? accessToken, string? refreshToken)> LoginAsync(LoginDetails details)
+        public async Task<LoginResult> LoginAsync(LoginDetails details)
         {
             var user = await _userManager.FindByEmailAsync(details.Email);
-            if (user == null) return (null, null);
+            if (user == null) return null;
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, details.Password, false);
-            if (!result.Succeeded) return (null, null);
+            if (!result.Succeeded) return null;
 
             // יצירת הטוקנים
             var accessToken = AuthHelpers.GenerateJwtAccessToken(user, _configuration);
@@ -53,7 +54,18 @@ namespace backend.Repositories
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
             await _userManager.UpdateAsync(user);
 
-            return (accessToken, refreshToken);
+            var loginResult = new LoginResult
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+                UserDto = new UserDto
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                }
+            };
+
+            return loginResult;
         }
 
         // refresh

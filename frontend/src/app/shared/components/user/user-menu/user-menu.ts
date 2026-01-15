@@ -1,8 +1,8 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { User } from '../../../../core/models/user.model';
 import { UserMenuDropdown } from './user-menu-dropdown/user-menu-dropdown';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-user-menu',
@@ -12,28 +12,18 @@ import { UserMenuDropdown } from './user-menu-dropdown/user-menu-dropdown';
 })
 export class UserMenu {
   router = inject(Router);
-
-  // Mocking the user state for now as requested
-  user = signal<User | null>({
-    firstName: 'עמית',
-    lastName: 'שטיינמץ',
-    email: 'amit@example.com',
-    isLoggedIn: false,
-    // avatarUrl: 'https://lh3.googleusercontent.com/a/ACg8ocL...', // Uncomment to test image
-  });
-
+  authService = inject(AuthService);
+  currentUser = this.authService.currentUser;
   isMenuOpen = signal(false);
 
   userInitials = computed(() => {
-    const u = this.user();
-    if (!u) return '';
-    return (u.firstName[0] + u.lastName[0]).toUpperCase();
+    const user = this.currentUser();
+    if (!user || !user.firstName || !user.lastName) return '';
+    return (user.firstName[0] + user.lastName[0]).toUpperCase();
   });
 
   toggleMenu() {
-    if (this.user()?.isLoggedIn) {
-      this.isMenuOpen.update((v) => !v);
-    } else {
+    if (!this.currentUser()) {
       this.router.navigate(['/auth/login']);
     }
   }

@@ -62,6 +62,17 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") // הכתובת של אנגולר
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials(); // קריטי עבור ה-Refresh Token Cookie
+    });
+});
+
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAssetsRepository, AssetsRepository>();
 
@@ -75,7 +86,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowAngular");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

@@ -7,11 +7,17 @@ namespace backend.Validators
     {
         public RegisterValidator()
         {
-            RuleFor(x => x.Fullname)
-                .NotEmpty().WithMessage("חובה להזין שם מלא")
-                .MinimumLength(2).WithMessage("שם מלא חייב להכיל לפחות 2 תווים")
-                .MaximumLength(50).WithMessage("שם מלא לא יכול לעלות על 50 תווים")
-                .Matches(@"^[a-zA-Zא-ת\s]+$").WithMessage("שם מלא יכול להכיל אותיות ורווחים בלבד");
+            RuleFor(x => x.FirstName)
+                .NotEmpty().WithMessage("חובה להזין שם פרטי")
+                .MinimumLength(2).WithMessage("שם פרטי חייב להכיל לפחות 2 תווים")
+                .MaximumLength(50).WithMessage("שם פרטי לא יכול לעלות על 50 תווים")
+                .Matches(@"^[a-zA-Zא-ת\s]+$").WithMessage("שם פרטי יכול להכיל אותיות ורווחים בלבד");
+
+            RuleFor(x => x.LastName)
+                .NotEmpty().WithMessage("חובה להזין שם משפחה")
+                .MinimumLength(2).WithMessage("שם משפחה חייב להכיל לפחות 2 תווים")
+                .MaximumLength(50).WithMessage("שם משפחה לא יכול לעלות על 50 תווים")
+                .Matches(@"^[a-zA-Zא-ת\s]+$").WithMessage("שם משפחה יכול להכיל אותיות ורווחים בלבד");
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("חובה להזין כתובת אימייל")
