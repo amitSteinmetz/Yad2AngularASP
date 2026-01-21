@@ -1,4 +1,5 @@
-﻿using backend.DTOs;
+﻿using Azure.Core;
+using backend.DTOs;
 using backend.Helpers;
 using backend.IRepositories;
 using backend.Models;
@@ -37,7 +38,7 @@ namespace backend.Repositories
         }
 
         // login
-        public async Task<LoginResult> LoginAsync(LoginDetails details)
+        public async Task<AuthResult> LoginAsync(LoginDetails details)
         {
             var user = await _userManager.FindByEmailAsync(details.Email);
             if (user == null) return null;
@@ -54,7 +55,7 @@ namespace backend.Repositories
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
             await _userManager.UpdateAsync(user);
 
-            var loginResult = new LoginResult
+            var loginResult = new AuthResult
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
@@ -69,16 +70,14 @@ namespace backend.Repositories
         }
 
         // refresh
-        public async Task<(string? accessToken, string? refreshToken)> RefreshTokenAsync(string refreshToken)
+        public async Task<AuthResult> RefreshTokenAsync(string refreshToken)
         {
             // 1. חיפוש המשתמש שמחזיק בטוקן הזה
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
 
             // 2. בדיקה שהמשתמש קיים, שהטוקן תואם ושתוקפו לא פג
-            if (user == null || user.RefreshTokenExpiryTime <= DateTime.Now)
-            {
-                return (null, null);
-            }
+            if (user == null || user.RefreshTokenExpiryTime <= DateTime.Now) return null;
+            
 
             // 3. יצירת Access Token חדש וריפרש טוקן חדש (לשיפור האבטחה - Refresh Token Rotation)
             var newAccessToken = AuthHelpers.GenerateJwtAccessToken(user, _configuration);
@@ -89,7 +88,18 @@ namespace backend.Repositories
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
             await _userManager.UpdateAsync(user);
 
-            return (newAccessToken, newRefreshToken);
+            var refreshResult = new AuthResult
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
+                UserDto = new UserDto
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                }
+            };
+
+            return refreshResult;
         }
 
         // logout

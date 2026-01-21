@@ -1,33 +1,55 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class LoginPage {
-  email = '';
-  password = '';
-  authService = inject(AuthService);
-  router = inject(Router);
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  loginForm: FormGroup = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(16),
+        Validators.pattern(/[A-Z]/),
+        Validators.pattern(/[a-z]/),
+        Validators.pattern(/[0-9]/),
+        Validators.pattern(/[@$!%*?&]/),
+      ],
+    ],
+  });
+
+  showPassword = false;
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   onSubmit() {
-    console.log('Login attempt:', { email: this.email, password: this.password });
-    this.authService.login({ email: this.email, password: this.password }).subscribe({
-      next: (response) => {
-        console.log(response);
-        this.router.navigate(['/']);
-      },
-      error: (error) => {
-        console.log('error: ', error.message);
-        // console.error(error);
-      },
-    });
+    if (this.loginForm.valid) {
+      console.log('Login attempt:', this.loginForm.value);
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (response) => {
+          console.log(response);
+          this.router.navigate(['/']);
+        },
+        error: (error) => {
+          console.error('Login error: ', error.message);
+        },
+      });
+    }
   }
 }

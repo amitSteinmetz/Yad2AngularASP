@@ -7,8 +7,8 @@ namespace backend.IRepositories
     public interface IAuthRepository
     {
         Task<IdentityResult> RegisterAsync(RegisterDetails registerDetails);
-        Task<LoginResult> LoginAsync(LoginDetails details);
-        Task<(string? accessToken, string? refreshToken)> RefreshTokenAsync(string refreshToken);
+        Task<AuthResult> LoginAsync(LoginDetails details);
+        Task<AuthResult> RefreshTokenAsync(string refreshToken);
         Task LogoutAsync(string? refreshToken);
     }
 }

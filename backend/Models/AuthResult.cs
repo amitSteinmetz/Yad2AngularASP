@@ -2,7 +2,7 @@ using backend.DTOs;
 
 namespace backend.Models
 {
-    public class LoginResult
+    public class AuthResult
     {
         public UserDto UserDto { get; set; } = null!;
         public string? RefreshToken { get; set; }

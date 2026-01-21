@@ -29,9 +29,12 @@ export class AuthService {
       .pipe(
         tap((response) => {
           console.log(response.message);
+        }),
+        catchError((error) => {
+          console.log(error);
+          return error;
         })
-      )
-      .subscribe();
+      );
   }
 
   login(credentials: LoginDetails) {

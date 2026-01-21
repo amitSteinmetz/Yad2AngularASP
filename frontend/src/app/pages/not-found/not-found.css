@@ -1,0 +1,73 @@
+.not-found-container {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  font-family: 'Assistant', sans-serif;
+  background-color: #fff;
+}
+
+.error-illustration {
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.error-code {
+  font-size: 120px;
+  font-weight: 900;
+  color: #ff7100;
+  margin: 0;
+  line-height: 1;
+  opacity: 0.1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.cactus-icon {
+  font-size: 80px;
+  z-index: 1;
+  position: relative;
+}
+
+.not-found-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #363636;
+  margin-bottom: 16px;
+}
+
+.not-found-text {
+  font-size: 18px;
+  color: #666;
+  max-width: 400px;
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.home-btn {
+  background-color: #ff7100;
+  color: white;
+  padding: 14px 32px;
+  border-radius: 28px;
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(255, 113, 0, 0.2);
+}
+
+.home-btn:hover {
+  background-color: #e66600;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 113, 0, 0.3);
+}
+
+.home-btn:active {
+  transform: translateY(0);
+}

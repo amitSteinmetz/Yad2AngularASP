@@ -65,13 +65,13 @@ namespace backend.Controllers
                 return Unauthorized(new { message = Resources.ClientMessages.Auth.NoRefreshToken });
             }
 
-            var (newAccessToken, newRefreshToken) = await _authRepository.RefreshTokenAsync(refreshToken);
+            var result = await _authRepository.RefreshTokenAsync(refreshToken);
 
-            if (newAccessToken == null || newRefreshToken == null)
+            if (result == null)
             {
                 return Unauthorized(new { message = Resources.ClientMessages.Auth.RefreshTokenInvalid });
             }
-
+          
             // עדכון העוגייה עם הריפרש טוקן החדש
             var cookieOptions = new CookieOptions
             {
@@ -80,9 +80,9 @@ namespace backend.Controllers
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTime.Now.AddDays(7)
             };
-            Response.Cookies.Append("refreshToken", newRefreshToken, cookieOptions);
+            Response.Cookies.Append("refreshToken", result.RefreshToken, cookieOptions);
 
-            return Ok(new { accessToken = newAccessToken });
+            return Ok(new { accessToken = result.AccessToken, user = result.UserDto });
         }
 
         // logout
