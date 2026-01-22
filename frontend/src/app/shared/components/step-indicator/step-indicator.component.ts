@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 
@@ -10,22 +10,19 @@ import { FormGroup } from '@angular/forms';
   styleUrl: './step-indicator.component.css',
 })
 export class StepIndicatorComponent {
-  @Input() currentStep = 1;
+  currentStep = model(1);
   @Input() form?: FormGroup;
-  @Output() currentStepChange = new EventEmitter<number>();
 
   nextStep() {
     if (this.isStepValid(1)) {
-      this.currentStep = 2;
-      this.currentStepChange.emit(this.currentStep);
+      this.currentStep.set(2);
     } else {
       this.markStepTouched(1);
     }
   }
 
   prevStep() {
-    this.currentStep = 1;
-    this.currentStepChange.emit(this.currentStep);
+    this.currentStep.set(1);
   }
 
   isStepValid(step: number): boolean {

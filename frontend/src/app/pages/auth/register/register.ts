@@ -1,28 +1,38 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { StepIndicatorComponent } from '../../../shared/components/step-indicator/step-indicator.component';
+import { AuthLayoutComponent } from '../../../shared/layouts/auth-layout/auth-layout';
+import {
+  AUTH_MESSAGES,
+  AUTH_PATTERNS,
+  AUTH_VALIDATION,
+} from '../../../core/constants/auth.constants';
+import { AuthValidators } from '../../../core/validators/auth.validators';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, StepIndicatorComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    StepIndicatorComponent,
+    AuthLayoutComponent,
+  ],
   templateUrl: './register.html',
-  styleUrl: '../login/login.css',
+  styleUrls: ['../auth-form.css'],
 })
 export class RegisterPage {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private notificationService = inject(NotificationService);
+
+  readonly authMessages = AUTH_MESSAGES;
 
   registerForm: FormGroup = this.fb.group(
     {
@@ -30,18 +40,18 @@ export class RegisterPage {
         '',
         [
           Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(50),
-          Validators.pattern(/^[a-zA-Zא-ת\s]+$/),
+          Validators.minLength(AUTH_VALIDATION.NAME.MIN_LENGTH),
+          Validators.maxLength(AUTH_VALIDATION.NAME.MAX_LENGTH),
+          Validators.pattern(AUTH_PATTERNS.NAME),
         ],
       ],
       lastName: [
         '',
         [
           Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(50),
-          Validators.pattern(/^[a-zA-Zא-ת\s]+$/),
+          Validators.minLength(AUTH_VALIDATION.NAME.MIN_LENGTH),
+          Validators.maxLength(AUTH_VALIDATION.NAME.MAX_LENGTH),
+          Validators.pattern(AUTH_PATTERNS.NAME),
         ],
       ],
       email: ['', [Validators.required, Validators.email]],
@@ -49,54 +59,43 @@ export class RegisterPage {
         '',
         [
           Validators.required,
-          Validators.minLength(8),
-          Validators.maxLength(16),
-          Validators.pattern(/[A-Z]/),
-          Validators.pattern(/[a-z]/),
-          Validators.pattern(/[0-9]/),
-          Validators.pattern(/[@$!%*?&]/),
+          Validators.minLength(AUTH_VALIDATION.PASSWORD.MIN_LENGTH),
+          Validators.maxLength(AUTH_VALIDATION.PASSWORD.MAX_LENGTH),
+          Validators.pattern(AUTH_PATTERNS.PASSWORD.UPPERCASE),
+          Validators.pattern(AUTH_PATTERNS.PASSWORD.LOWERCASE),
+          Validators.pattern(AUTH_PATTERNS.PASSWORD.NUMBER),
+          Validators.pattern(AUTH_PATTERNS.PASSWORD.SPECIAL),
         ],
       ],
       repeatPassword: ['', [Validators.required]],
     },
-    { validators: this.passwordMatchValidator },
+    { validators: AuthValidators.passwordMatch },
   );
 
-  showPassword = false;
-  showRepeatPassword = false;
-  currentStep = 1;
+  showPassword = signal(false);
+  showRepeatPassword = signal(false);
+  currentStep = signal(1);
 
   togglePassword() {
-    this.showPassword = !this.showPassword;
+    this.showPassword.update((v) => !v);
   }
 
   toggleRepeatPassword() {
-    this.showRepeatPassword = !this.showRepeatPassword;
-  }
-
-  passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
-    const password = control.get('password');
-    const repeatPassword = control.get('repeatPassword');
-
-    if (password && repeatPassword && password.value !== repeatPassword.value) {
-      repeatPassword.setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
-    }
-    return null;
+    this.showRepeatPassword.update((v) => !v);
   }
 
   onSubmit() {
     if (this.registerForm.valid) {
-      const { firstName, lastName, email, password } = this.registerForm.value;
-      console.log('Register attempt:', { firstName, lastName, email, password });
-
-      this.authService.register({ firstName, lastName, email, password }).subscribe({
-        next: (response) => {
-          console.log(response);
+      this.authService.register(this.registerForm.value).subscribe({
+        next: () => {
+          this.notificationService.success('נרשמת בהצלחה! כעת ניתן להתחבר');
           this.router.navigate(['/auth/login']);
         },
         error: (error) => {
-          console.error('Registration error: ', error.message);
+          console.log('caught error', error);
+          this.notificationService.error(
+            error.message || 'אירעה שגיאה בתהליך ההרשמה. אנא נסה שוב.',
+          );
         },
       });
     }

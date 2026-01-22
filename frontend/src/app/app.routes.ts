@@ -18,14 +18,18 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'auth/login',
-    component: LoginPage,
-    canActivate: [guestGuard],
-  },
-  {
-    path: 'auth/register',
-    component: RegisterPage,
-    canActivate: [guestGuard],
+    path: 'auth',
+    canActivateChild: [guestGuard],
+    children: [
+      {
+        path: 'login',
+        component: LoginPage,
+      },
+      {
+        path: 'register',
+        component: RegisterPage,
+      },
+    ],
   },
   {
     path: '**',

@@ -1,20 +1,30 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
+import { NotificationService } from '../../../core/services/notification.service';
+import { AuthLayoutComponent } from '../../../shared/layouts/auth-layout/auth-layout';
+import {
+  AUTH_MESSAGES,
+  AUTH_PATTERNS,
+  AUTH_VALIDATION,
+} from '../../../core/constants/auth.constants';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, AuthLayoutComponent],
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrls: ['./login.css', '../auth-form.css'],
 })
 export class LoginPage {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private notificationService = inject(NotificationService);
+
+  readonly authMessages = AUTH_MESSAGES;
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -22,32 +32,32 @@ export class LoginPage {
       '',
       [
         Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(16),
-        Validators.pattern(/[A-Z]/),
-        Validators.pattern(/[a-z]/),
-        Validators.pattern(/[0-9]/),
-        Validators.pattern(/[@$!%*?&]/),
+        Validators.minLength(AUTH_VALIDATION.PASSWORD.MIN_LENGTH),
+        Validators.maxLength(AUTH_VALIDATION.PASSWORD.MAX_LENGTH),
+        Validators.pattern(AUTH_PATTERNS.PASSWORD.UPPERCASE),
+        Validators.pattern(AUTH_PATTERNS.PASSWORD.LOWERCASE),
+        Validators.pattern(AUTH_PATTERNS.PASSWORD.NUMBER),
+        Validators.pattern(AUTH_PATTERNS.PASSWORD.SPECIAL),
       ],
     ],
   });
 
-  showPassword = false;
+  showPassword = signal(false);
 
   togglePassword() {
-    this.showPassword = !this.showPassword;
+    this.showPassword.update((val) => !val);
   }
 
   onSubmit() {
     if (this.loginForm.valid) {
-      console.log('Login attempt:', this.loginForm.value);
       this.authService.login(this.loginForm.value).subscribe({
-        next: (response) => {
-          console.log(response);
+        next: () => {
           this.router.navigate(['/']);
         },
         error: (error) => {
-          console.error('Login error: ', error.message);
+          this.notificationService.error(
+            error.message || 'ההתחברות נכשלה. אנא בדוק את פרטי המשתמש ונסה שוב.',
+          );
         },
       });
     }
