@@ -1,10 +1,11 @@
 import { Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError, tap, finalize } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { HttpClient, HttpContext } from '@angular/common/http';
+import { catchError, tap, switchMap, map } from 'rxjs/operators';
+import { throwError, Observable, of } from 'rxjs';
 import { User } from '../models/user.model';
 import { LoginDetails } from '../models/loginDetails.model';
 import { RegisterDetails } from '../models/registerDetails.model';
+import { IS_PUBLIC } from '../interceptors/auth.interceptor';
 
 export interface LoginResponse {
   accessToken: string;
@@ -26,75 +27,131 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  register(credentials: RegisterDetails) {
-    return this.http.post<RegisterResponse>(`${API_BASE_URL}/register`, credentials).pipe(
-      catchError((error) => {
-        let errorMessage = 'אירעה שגיאה בתהליך ההרשמה.';
+  getAccessToken(): string | null {
+    return this.accessToken;
+  }
 
-        if (error.error) {
-          if (typeof error.error === 'string') {
-            errorMessage = error.error;
-          } else if (error.error.message) {
-            errorMessage = error.error.message;
-          } else if (error.error.error) {
-            errorMessage = error.error.error;
-          } else if (Array.isArray(error.error)) {
-            errorMessage = error.error.map((e: any) => e.description || e.message).join('\n');
-          } else if (error.error.errors) {
-            // Handle ASP.NET Validation errors object { errors: { Field: ["error"] } }
-            errorMessage = Object.values(error.error.errors).flat().join('\n');
-          }
-        } else if (error.message) {
-          errorMessage = error.message;
-        }
+  private isTokenExpired(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expiry = payload.exp;
+      // Check if expired (with a 10-second buffer)
+      return Math.floor(Date.now() / 1000) >= expiry - 10;
+    } catch {
+      return true;
+    }
+  }
 
-        // Return a modified error object that includes our extracted message
-        return throwError(() => ({ ...error, message: errorMessage }));
-      }),
+  getValidToken(): Observable<string | null> {
+    const token = this.accessToken;
+
+    // If no token, we don't refresh here (handled by bootstrap)
+    if (!token) {
+      return of(null);
+    }
+
+    // If token exists but is expired, we refresh
+    if (this.isTokenExpired(token)) {
+      return this.handleTokenRefresh();
+    }
+
+    return of(token);
+  }
+
+  private handleTokenRefresh(): Observable<string | null> {
+    return this.refreshToken().pipe(
+      map((response) => response.accessToken),
+      catchError((err) => throwError(() => err)),
     );
   }
 
-  login(credentials: LoginDetails) {
-    return this.http.post<LoginResponse>(`${API_BASE_URL}/login`, credentials).pipe(
-      tap((response) => {
-        this.accessToken = response.accessToken;
-        this.currentUserSignal.set(response.user);
-      }),
-      catchError((error) => {
-        let errorMessage = 'נא לוודא את פרטי ההתחברות.';
+  register(credentials: RegisterDetails) {
+    return this.http
+      .post<RegisterResponse>(`${API_BASE_URL}/register`, credentials, {
+        context: new HttpContext().set(IS_PUBLIC, true),
+      })
+      .pipe(
+        catchError((error) => {
+          let errorMessage = 'אירעה שגיאה בתהליך ההרשמה.';
 
-        if (error.error) {
-          if (typeof error.error === 'string') {
-            errorMessage = error.error;
-          } else if (error.error.message) {
-            errorMessage = error.error.message;
-          } else if (error.error.error) {
-            errorMessage = error.error.error;
+          if (error.error) {
+            if (typeof error.error === 'string') {
+              errorMessage = error.error;
+            } else if (error.error.message) {
+              errorMessage = error.error.message;
+            } else if (error.error.error) {
+              errorMessage = error.error.error;
+            } else if (Array.isArray(error.error)) {
+              errorMessage = error.error.map((e: any) => e.description || e.message).join('\n');
+            } else if (error.error.errors) {
+              // Handle ASP.NET Validation errors object { errors: { Field: ["error"] } }
+              errorMessage = Object.values(error.error.errors).flat().join('\n');
+            }
+          } else if (error.message) {
+            errorMessage = error.message;
           }
-        } else if (error.message) {
-          errorMessage = error.message;
-        }
 
-        return throwError(() => ({ ...error, message: errorMessage }));
-      }),
-    );
+          // Return a modified error object that includes our extracted message
+          return throwError(() => ({ ...error, message: errorMessage }));
+        }),
+      );
+  }
+
+  login(credentials: LoginDetails) {
+    return this.http
+      .post<LoginResponse>(`${API_BASE_URL}/login`, credentials, {
+        context: new HttpContext().set(IS_PUBLIC, true),
+      })
+      .pipe(
+        tap((response) => {
+          this.accessToken = response.accessToken;
+          this.currentUserSignal.set(response.user);
+        }),
+        catchError((error) => {
+          let errorMessage = 'נא לוודא את פרטי ההתחברות.';
+
+          if (error.error) {
+            if (typeof error.error === 'string') {
+              errorMessage = error.error;
+            } else if (error.error.message) {
+              errorMessage = error.error.message;
+            } else if (error.error.error) {
+              errorMessage = error.error.error;
+            }
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+
+          return throwError(() => ({ ...error, message: errorMessage }));
+        }),
+      );
   }
 
   logout() {
     return this.http.post(`${API_BASE_URL}/logout`, {}).pipe(
-      finalize(() => {
+      tap(() => {
         this.accessToken = null;
         this.currentUserSignal.set(null);
       }),
     );
   }
 
-  // refreshToken() {
-  //   return this.http.post<LoginResponse>('api/auth/refresh-token', {}).pipe(
-  //     tap((response) => {
-  //       this.accessToken = response.accessToken;
-  //       this.currentUserSignal.set(response.user);
-  //     })
-  //   );
-  // }
+  refreshToken() {
+    return this.http
+      .post<LoginResponse>(
+        `${API_BASE_URL}/refresh-token`,
+        {},
+        {
+          context: new HttpContext().set(IS_PUBLIC, true),
+          withCredentials: true,
+        },
+      )
+      .pipe(
+        tap((response) => {
+          this.accessToken = response.accessToken;
+          this.currentUserSignal.set(response.user);
+          console.log('new accessToken: ', this.accessToken);
+        }),
+      );
+  }
 }

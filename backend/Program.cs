@@ -1,4 +1,4 @@
-using backend.DB;
+п»їusing backend.DB;
 using backend.Helpers;
 using backend.IRepositories;
 using backend.Models;
@@ -66,10 +66,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
     {
-        policy.WithOrigins("http://localhost:4200") // длъебъ щм арвемш
+        policy.WithOrigins("http://localhost:4200", "https://localhost:4200") // Ч”Ч›ЧЄЧ•Ч‘ЧЄ Ч©Чњ ЧђЧ Ч’Ч•ЧњЧЁ
               .AllowAnyMethod()
               .AllowAnyHeader()
-              .AllowCredentials(); // чшйий тбеш д-Refresh Token Cookie
+              .AllowCredentials(); // Ч§ЧЁЧ™ЧЧ™ ЧўЧ‘Ч•ЧЁ Ч”-Refresh Token Cookie
     });
 });
 

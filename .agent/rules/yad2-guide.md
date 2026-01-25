@@ -38,6 +38,8 @@ Architecture: Follow Clean Architecture or Onion Architecture (Controller -> Ser
 
 - Types: Strict typing everywhere. Avoid any at all costs. Interface names should be shared between Backend and Frontend if possible.
 
+- deprecated warnings: do'nt ignore deprecration warnings - if they exist, find un-deprecated alternative.
+
 4. Code Refactoring & Logic
 
 - Deduplication: Before creating a new service or component, check existing folders for a "Common" or "Shared" equivalent.

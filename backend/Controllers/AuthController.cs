@@ -42,10 +42,12 @@ namespace backend.Controllers
             // יצירת העוגייה
             var cookieOptions = new CookieOptions
             {
-                HttpOnly = true,    // מונע מ-JavaScript לגשת לעוגייה (הגנה מ-XSS)
-                Secure = true,      // נשלח רק ב-HTTPS
-                SameSite = SameSiteMode.Strict, // הגנה מ-CSRF
-                Expires = DateTime.Now.AddHours(5)
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/",
+                MaxAge = TimeSpan.FromHours(5),
+                IsEssential = true
             };
 
             Response.Cookies.Append("refreshToken", result.RefreshToken, cookieOptions);
@@ -77,8 +79,10 @@ namespace backend.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.Now.AddDays(7)
+                SameSite = SameSiteMode.None,
+                Path = "/",
+                MaxAge = TimeSpan.FromDays(7),
+                IsEssential = true
             };
             Response.Cookies.Append("refreshToken", result.RefreshToken, cookieOptions);
 
@@ -101,7 +105,9 @@ namespace backend.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict
+                SameSite = SameSiteMode.None,
+                Path = "/",
+                IsEssential = true
             });
 
             return Ok(new { message = Resources.ClientMessages.Auth.LogoutSuccess });
