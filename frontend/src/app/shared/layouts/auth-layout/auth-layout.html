@@ -1,0 +1,64 @@
+<div class="auth-container">
+  <main class="auth-main">
+    <a routerLink="/" class="back-home-btn" title="חזרה לדף הבית">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+    </a>
+    <!-- Left Section -->
+    <div class="info-section">
+      <h1 class="info-title">
+        לקנות מהר, למכור מהר.<br />
+        ויש לנו אחלה כלים לזה.
+      </h1>
+      <div class="info-icons">
+        <div class="icon-item">
+          <div class="icon-circle">
+            <img src="/images/auth-page/profile.svg" alt="Personal Area" />
+          </div>
+          <span>אזור אישי</span>
+        </div>
+        <div class="icon-item">
+          <div class="icon-circle">
+            <img src="/images/auth-page/publish.svg" alt="Publish Ad" />
+          </div>
+          <span>פרסום מודעה</span>
+        </div>
+        <div class="icon-item">
+          <div class="icon-circle">
+            <img src="/images/auth-page/chat.svg" alt="Chat" />
+          </div>
+          <span>צ'אט</span>
+        </div>
+        <div class="icon-item">
+          <div class="icon-circle">
+            <img src="/images/auth-page/alert.svg" alt="Alerts" />
+            <span class="badge">1</span>
+          </div>
+          <span>התראות</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Section -->
+    <div class="form-section">
+      <div class="auth-card">
+        @if (title) {
+          <h2 class="form-title">{{ title }}</h2>
+        }
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </main>
+</div>

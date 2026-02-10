@@ -1,0 +1,11 @@
+.apartment-image {
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.image-container {
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.1);
+}

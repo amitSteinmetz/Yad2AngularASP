@@ -1,0 +1,106 @@
+<header
+  class="sticky top-0 z-50 bg-white shadow-md border-b border-gray-200 transition-all duration-300"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 md:h-20">
+      <!-- Logo -->
+      <div class="flex-shrink-0">
+        <a routerLink="/" class="flex items-center">
+          <img
+            src="images/logo.svg"
+            alt="Yad2 Logo"
+            class="h-8 md:h-10 w-auto hover:opacity-80 transition-opacity"
+          />
+        </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center gap-1 lg:gap-2 h-full">
+        @for (category of categories; track $index) {
+        <div
+          class="relative h-full flex items-center"
+          (mouseenter)="onCategoryHover(category)"
+          (mouseleave)="onCategoryHover(null)"
+        >
+          <div
+            class="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-all duration-200 whitespace-nowrap"
+            [class.text-orange-600]="activeCategory() === category"
+          >
+            {{ category.label }}
+          </div>
+
+          @if (activeCategory() === category && category.options) {
+          <app-category-item-modal
+            [categoryItem]="category"
+            class="absolute top-full right-0 mt-0 pt-2 z-50 min-w-[320px]"
+          />
+          }
+        </div>
+        }
+      </nav>
+
+      <!-- Publish & User Button -->
+      <div class="flex items-center gap-2 md:gap-4">
+        <div class="hidden md:flex items-center">
+          <app-user-menu />
+        </div>
+        <div class="flex items-center">
+          <app-publish-button />
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button
+          (click)="toggleMobileMenu()"
+          class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+          [attr.aria-expanded]="isMobileMenuOpen()"
+          aria-label="תפריט"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 transition-transform duration-300"
+            [class.rotate-90]="isMobileMenuOpen()"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            @if (isMobileMenuOpen()) {
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+            } @else {
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+            }
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav
+      class="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
+      [class]="isMobileMenuOpen() ? 'max-h-96 opacity-100 pb-4' : 'max-h-0 opacity-0'"
+    >
+      <div class="space-y-1 pt-2">
+        <div class="md:hidden border-b border-gray-100 pb-2 mb-2">
+          <app-user-menu />
+        </div>
+        @for (category of categories; track $index) {
+        <div
+          (click)="closeMobileMenu()"
+          class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-all duration-200"
+        >
+          {{ category.label }}
+        </div>
+        }
+      </div>
+    </nav>
+  </div>
+</header>

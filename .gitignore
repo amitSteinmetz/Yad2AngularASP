@@ -1,0 +1,14 @@
+# Visual Studio קבצי הגדרות של 
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docstates
+
+# קבצי הרצה ותוצרים
+out/
+publish/
+
+# קבצי הגדרות מקומיים (מכילים סיסמאות לפעמים)
+appsettings.Development.json

@@ -1,0 +1,41 @@
+<a
+  [routerLink]="apartment().route"
+  class="group block bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1"
+>
+  <div class="relative overflow-hidden aspect-[16/10] image-container bg-gray-100">
+    <img
+      [src]="apartment().image"
+      [alt]="apartment().label"
+      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 apartment-image"
+      loading="lazy"
+    />
+    <div
+      class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"
+    ></div>
+    <div
+      class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg border border-white/20"
+    >
+      <span class="text-orange-600 font-bold text-xs uppercase tracking-wider">חדש</span>
+    </div>
+  </div>
+  <div class="p-4">
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="text-2xl font-bold text-gray-900">₪{{ apartment().price.toLocaleString() }}</h3>
+    </div>
+    <div class="flex items-center gap-2 text-gray-600">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 text-orange-500"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      <p class="text-sm">{{ apartment().address }}</p>
+    </div>
+  </div>
+</a>

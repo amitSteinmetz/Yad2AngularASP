@@ -1,0 +1,268 @@
+<app-auth-layout
+  [title]="currentStep() === 1 ? 'נעים להכיר, הצטרפו אלינו' : 'רק עוד קצת וסיימנו...'"
+>
+  <div class="social-buttons">
+    <button type="button" class="social-btn google">
+      <img src="/images/auth-page/google.svg" alt="Google" />
+      היכנסו עם גוגל
+    </button>
+  </div>
+
+  <div class="divider">
+    <span>או הרשמו דרך המייל</span>
+  </div>
+
+  <app-step-indicator
+    #indicator
+    [(currentStep)]="currentStep"
+    [form]="registerForm"
+  ></app-step-indicator>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    @if (currentStep() === 1) {
+      <div class="form-group">
+        <label for="firstName">שם פרטי</label>
+        <input
+          type="text"
+          id="firstName"
+          formControlName="firstName"
+          placeholder="ישראל"
+          class="form-input"
+          [class.error]="
+            registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched
+          "
+        />
+        @if (registerForm.get('firstName')?.touched) {
+          @if (registerForm.get('firstName')?.errors?.['required']) {
+            <span class="error-text">{{ authMessages.FIRST_NAME.REQUIRED }}</span>
+          } @else if (registerForm.get('firstName')?.errors?.['minlength']) {
+            <span class="error-text">{{ authMessages.FIRST_NAME.LENGTH }}</span>
+          } @else if (registerForm.get('firstName')?.errors?.['maxlength']) {
+            <span class="error-text">{{ authMessages.FIRST_NAME.MAX_LENGTH }}</span>
+          } @else if (registerForm.get('firstName')?.errors?.['pattern']) {
+            <span class="error-text">{{ authMessages.FIRST_NAME.PATTERN }}</span>
+          }
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">שם משפחה</label>
+        <input
+          type="text"
+          id="lastName"
+          formControlName="lastName"
+          placeholder="ישראלי"
+          class="form-input"
+          [class.error]="
+            registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched
+          "
+        />
+        @if (registerForm.get('lastName')?.touched) {
+          @if (registerForm.get('lastName')?.errors?.['required']) {
+            <span class="error-text">{{ authMessages.LAST_NAME.REQUIRED }}</span>
+          } @else if (registerForm.get('lastName')?.errors?.['minlength']) {
+            <span class="error-text">{{ authMessages.LAST_NAME.LENGTH }}</span>
+          } @else if (registerForm.get('lastName')?.errors?.['maxlength']) {
+            <span class="error-text">{{ authMessages.LAST_NAME.MAX_LENGTH }}</span>
+          } @else if (registerForm.get('lastName')?.errors?.['pattern']) {
+            <span class="error-text">{{ authMessages.LAST_NAME.PATTERN }}</span>
+          }
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">מייל</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="example@mail.com"
+          class="form-input"
+          [class.error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+        />
+        @if (registerForm.get('email')?.touched) {
+          @if (registerForm.get('email')?.errors?.['required']) {
+            <span class="error-text">{{ authMessages.EMAIL.REQUIRED }}</span>
+          } @else if (registerForm.get('email')?.errors?.['email']) {
+            <span class="error-text">{{ authMessages.EMAIL.INVALID }}</span>
+          }
+        }
+      </div>
+
+      <div class="next-step-wrapper">
+        <button
+          type="button"
+          class="next-step-btn"
+          (click)="indicator.nextStep()"
+          [disabled]="!indicator.isStepValid(1)"
+        >
+          להמשיך לסיסמה
+        </button>
+      </div>
+    } @else if (currentStep() === 2) {
+      <div class="form-group">
+        <label for="password">סיסמה</label>
+        <div class="password-input-wrapper">
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            placeholder="הקלד סיסמה"
+            class="form-input"
+            [class.error]="
+              registerForm.get('password')?.invalid && registerForm.get('password')?.touched
+            "
+          />
+          <button type="button" class="toggle-password" (click)="togglePassword()">
+            @if (showPassword()) {
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+                ></path>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            } @else {
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            }
+          </button>
+        </div>
+        @if (registerForm.get('password')?.touched) {
+          <div class="password-errors">
+            @if (registerForm.get('password')?.errors?.['required']) {
+              <span class="error-text">{{ authMessages.PASSWORD.REQUIRED }}</span>
+            } @else if (
+              registerForm.get('password')?.errors?.['minlength'] ||
+              registerForm.get('password')?.errors?.['maxlength']
+            ) {
+              <span class="error-text">{{ authMessages.PASSWORD.LENGTH }}</span>
+            } @else if (registerForm.get('password')?.errors?.['pattern']) {
+              @if (!registerForm.get('password')?.value.match('[A-Z]')) {
+                <span class="error-text">{{ authMessages.PASSWORD.UPPERCASE }}</span>
+              }
+              @if (!registerForm.get('password')?.value.match('[a-z]')) {
+                <span class="error-text">{{ authMessages.PASSWORD.LOWERCASE }}</span>
+              }
+              @if (!registerForm.get('password')?.value.match('[0-9]')) {
+                <span class="error-text">{{ authMessages.PASSWORD.NUMBER }}</span>
+              }
+              @if (!registerForm.get('password')?.value.match('[@$!%*?&]')) {
+                <span class="error-text">{{ authMessages.PASSWORD.SPECIAL }}</span>
+              }
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="repeatPassword">חזור על הסיסמה</label>
+        <div class="password-input-wrapper">
+          <input
+            [type]="showRepeatPassword() ? 'text' : 'password'"
+            id="repeatPassword"
+            formControlName="repeatPassword"
+            placeholder="הקלד סיסמה שוב"
+            class="form-input"
+            [class.error]="
+              registerForm.get('repeatPassword')?.invalid &&
+              registerForm.get('repeatPassword')?.touched
+            "
+          />
+          <button type="button" class="toggle-password" (click)="toggleRepeatPassword()">
+            @if (showRepeatPassword()) {
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+                ></path>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            } @else {
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            }
+          </button>
+        </div>
+        @if (
+          registerForm.get('repeatPassword')?.invalid && registerForm.get('repeatPassword')?.touched
+        ) {
+          <span class="error-text">
+            {{
+              registerForm.get('repeatPassword')?.errors?.['passwordMismatch']
+                ? authMessages.PASSWORD.MISMATCH
+                : authMessages.PASSWORD.REQUIRED
+            }}
+          </span>
+        }
+      </div>
+
+      <div class="form-navigation">
+        <button type="button" class="back-link" (click)="indicator.prevStep()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+          חזרה
+        </button>
+        <button type="submit" class="submit-btn" [disabled]="registerForm.invalid">הרשמה</button>
+      </div>
+    }
+  </form>
+
+  <div class="footer-link">
+    <span>כבר יש לך חשבון?</span>
+    <a routerLink="/auth/login">להתחברות</a>
+  </div>
+</app-auth-layout>

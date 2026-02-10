@@ -1,0 +1,47 @@
+<div class="relative inline-block text-right" (mouseleave)="closeMenu()">
+  <button
+    (mouseenter)="currentUser() && isMenuOpen.set(true)"
+    (mouseleave)="isMenuOpen.set(false)"
+    (click)="toggleMenu()"
+    class="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-all duration-200 group"
+  >
+    <!-- Avatar -->
+    <div
+      class="w-10 h-10 rounded-full flex items-center justify-center border border-gray-200 shadow-sm transition-colors"
+      [class.bg-orange-500]="currentUser()"
+      [class.text-white]="currentUser()"
+      [class.bg-gray-100]="!currentUser()"
+      [class.text-gray-400]="!currentUser()"
+      [class.group-hover:bg-gray-200]="!currentUser()"
+    >
+      @if (currentUser()) {
+      <span class="text-sm font-bold">{{ userInitials() }}</span>
+      } @else {
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+        />
+      </svg>
+      }
+    </div>
+
+    <!-- Label -->
+    <span class="text-sm font-semibold text-gray-700">
+      {{ currentUser() ? currentUser()?.firstName : 'התחברות' }}
+    </span>
+  </button>
+
+  <!-- Dropdown Modal -->
+  @if (currentUser() && isMenuOpen()) {
+  <app-user-menu-dropdown [isOpen]="isMenuOpen()" (onMouseEnter)="isMenuOpen.set(true)" />
+  }
+</div>

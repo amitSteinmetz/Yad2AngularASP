@@ -1,0 +1,17 @@
+<div class="step-indicator">
+  <div class="step" [class.active]="currentStep() >= 1" [class.completed]="currentStep() > 1">
+    <span class="step-icon">
+      @if (currentStep() > 1) {
+        ✓
+      } @else {
+        1
+      }
+    </span>
+    <span class="step-label">פרטים אישיים</span>
+  </div>
+  <div class="step-line" [class.active]="currentStep() > 1"></div>
+  <div class="step" [class.active]="currentStep() === 2">
+    <span class="step-icon">2</span>
+    <span class="step-label">סיסמה</span>
+  </div>
+</div>
