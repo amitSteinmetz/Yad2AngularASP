@@ -11,12 +11,12 @@ import {
   AUTH_VALIDATION,
 } from '../../../core/constants/auth.constants';
 
-import { SocialAuthService, GoogleLoginProvider } from '@abacritt/angularx-social-login';
+import { SocialAuthService, GoogleLoginProvider, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, AuthLayoutComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, AuthLayoutComponent, GoogleSigninButtonModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css', '../auth-form.css'],
 })
@@ -34,18 +34,16 @@ export class LoginPage {
       if (user && user.idToken) {
         this.authService.googleLogin(user.idToken).subscribe({
           next: () => {
+            this.notificationService.success('Google login successful');
             this.router.navigate(['/']);
           },
           error: (error) => {
+            console.error(error);
             this.notificationService.error('Google login failed');
           }
         });
       }
     });
-  }
-
-  signInWithGoogle(): void {
-    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
   }
 
   loginForm: FormGroup = this.fb.group({

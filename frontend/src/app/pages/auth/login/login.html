@@ -1,9 +1,7 @@
 <app-auth-layout title="היי, טוב לראות אותך">
   <div class="social-buttons">
-    <button type="button" class="social-btn google" (click)="signInWithGoogle()">
-      <img src="/images/auth-page/google.svg" alt="Google" />
-      גוגל
-    </button>
+    <asl-google-signin-button type="standard" theme="filled_blue" size="large" text="signin_with" shape="pill"
+      logo_alignment="left" [width]="320" locale="he"></asl-google-signin-button>
   </div>
 
   <div class="divider">
@@ -13,94 +11,65 @@
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="email">מייל</label>
-      <input
-        type="email"
-        id="email"
-        formControlName="email"
-        placeholder="example@mail.com"
-        class="form-input"
-        [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
-      />
+      <input type="email" id="email" formControlName="email" placeholder="example@mail.com" class="form-input"
+        [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" />
       @if (loginForm.get('email')?.touched) {
-        @if (loginForm.get('email')?.errors?.['required']) {
-          <span class="error-text">{{ authMessages.EMAIL.REQUIRED }}</span>
-        } @else if (loginForm.get('email')?.errors?.['email']) {
-          <span class="error-text">{{ authMessages.EMAIL.INVALID }}</span>
-        }
+      @if (loginForm.get('email')?.errors?.['required']) {
+      <span class="error-text">{{ authMessages.EMAIL.REQUIRED }}</span>
+      } @else if (loginForm.get('email')?.errors?.['email']) {
+      <span class="error-text">{{ authMessages.EMAIL.INVALID }}</span>
+      }
       }
     </div>
 
     <div class="form-group">
       <label for="password">סיסמה</label>
       <div class="password-input-wrapper">
-        <input
-          [type]="showPassword() ? 'text' : 'password'"
-          id="password"
-          formControlName="password"
-          placeholder="הקלד סיסמה"
-          class="form-input"
-          [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-        />
+        <input [type]="showPassword() ? 'text' : 'password'" id="password" formControlName="password"
+          placeholder="הקלד סיסמה" class="form-input"
+          [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
         <button type="button" class="toggle-password" (click)="togglePassword()">
           @if (showPassword()) {
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
-              ></path>
-              <line x1="1" y1="1" x2="23" y2="23"></line>
-            </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+            </path>
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+          </svg>
           } @else {
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
           }
         </button>
       </div>
       @if (loginForm.get('password')?.touched) {
-        <div class="password-errors">
-          @if (loginForm.get('password')?.errors?.['required']) {
-            <span class="error-text">{{ authMessages.PASSWORD.REQUIRED }}</span>
-          } @else if (
-            loginForm.get('password')?.errors?.['minlength'] ||
-            loginForm.get('password')?.errors?.['maxlength']
-          ) {
-            <span class="error-text">{{ authMessages.PASSWORD.LENGTH }}</span>
-          } @else if (loginForm.get('password')?.errors?.['pattern']) {
-            @if (!loginForm.get('password')?.value.match('[A-Z]')) {
-              <span class="error-text">{{ authMessages.PASSWORD.UPPERCASE }}</span>
-            }
-            @if (!loginForm.get('password')?.value.match('[a-z]')) {
-              <span class="error-text">{{ authMessages.PASSWORD.LOWERCASE }}</span>
-            }
-            @if (!loginForm.get('password')?.value.match('[0-9]')) {
-              <span class="error-text">{{ authMessages.PASSWORD.NUMBER }}</span>
-            }
-            @if (!loginForm.get('password')?.value.match('[@$!%*?&]')) {
-              <span class="error-text">{{ authMessages.PASSWORD.SPECIAL }}</span>
-            }
-          }
-        </div>
+      <div class="password-errors">
+        @if (loginForm.get('password')?.errors?.['required']) {
+        <span class="error-text">{{ authMessages.PASSWORD.REQUIRED }}</span>
+        } @else if (
+        loginForm.get('password')?.errors?.['minlength'] ||
+        loginForm.get('password')?.errors?.['maxlength']
+        ) {
+        <span class="error-text">{{ authMessages.PASSWORD.LENGTH }}</span>
+        } @else if (loginForm.get('password')?.errors?.['pattern']) {
+        @if (!loginForm.get('password')?.value.match('[A-Z]')) {
+        <span class="error-text">{{ authMessages.PASSWORD.UPPERCASE }}</span>
+        }
+        @if (!loginForm.get('password')?.value.match('[a-z]')) {
+        <span class="error-text">{{ authMessages.PASSWORD.LOWERCASE }}</span>
+        }
+        @if (!loginForm.get('password')?.value.match('[0-9]')) {
+        <span class="error-text">{{ authMessages.PASSWORD.NUMBER }}</span>
+        }
+        @if (!loginForm.get('password')?.value.match('[@$!%*?&]')) {
+        <span class="error-text">{{ authMessages.PASSWORD.SPECIAL }}</span>
+        }
+        }
+      </div>
       }
     </div>
 
